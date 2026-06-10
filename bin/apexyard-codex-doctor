@@ -47,10 +47,12 @@ if data.get("project_doc_max_bytes") != 65536:
     raise SystemExit("project_doc_max_bytes is not top-level 65536")
 if not data.get("features", {}).get("hooks"):
     raise SystemExit("features.hooks is not enabled")
+if data.get("features", {}).get("apps") is not False:
+    raise SystemExit("features.apps is not disabled; ApexYard does not require Apps connectors")
 PY
 )
 if [ $? -eq 0 ]; then
-  pass ".codex/config.toml is valid and enables hooks"
+  pass ".codex/config.toml is valid, enables hooks, and disables Apps connectors"
 else
   fail ".codex/config.toml is invalid"
   printf '%s\n' "$config_errors"

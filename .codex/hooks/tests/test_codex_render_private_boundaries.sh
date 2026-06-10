@@ -93,6 +93,20 @@ else
   mark_fail "renderer does not write .codex/project-config.json"
 fi
 
+config_apps_errors=$(
+  python3 - "$ROOT/.codex/config.toml" <<'PY' 2>&1
+import pathlib, sys, tomllib
+data = tomllib.loads(pathlib.Path(sys.argv[1]).read_text())
+if data.get("features", {}).get("apps") is not False:
+    raise SystemExit("features.apps is not false")
+PY
+)
+if [ $? -eq 0 ]; then
+  mark_pass "renderer disables Codex Apps connectors in project config"
+else
+  mark_fail "renderer disables Codex Apps connectors in project config" "$config_apps_errors"
+fi
+
 echo
 echo "===== test_codex_render_private_boundaries.sh ====="
 echo "Passed: $PASS"

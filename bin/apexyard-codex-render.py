@@ -492,7 +492,7 @@ def write_hooks_json() -> None:
 def write_config() -> None:
     (ROOT / ".codex").mkdir(exist_ok=True)
     (ROOT / ".codex" / "config.toml").write_text(
-        'project_doc_max_bytes = 65536\n\n[features]\nhooks = true\n',
+        'project_doc_max_bytes = 65536\n\n[features]\nhooks = true\napps = false\n',
         encoding="utf-8",
     )
 
