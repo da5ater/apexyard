@@ -332,14 +332,18 @@ portfolio_validate() {
     return 1
   fi
 
-  # Parse as YAML if yq is available; else minimal grep check.
+  # Parse as YAML if yq is available; else minimal grep check. Support both
+  # Mike Farah yq v4 (`yq eval`) and the Python yq wrapper (`yq <jq-filter>`).
   if command -v yq >/dev/null 2>&1; then
-    if ! yq eval '.' "$registry" >/dev/null 2>&1; then
+    local has_projects
+    if yq eval '.' "$registry" >/dev/null 2>&1; then
+      has_projects=$(yq eval 'has("projects")' "$registry" 2>/dev/null)
+    elif yq '.' "$registry" >/dev/null 2>&1; then
+      has_projects=$(yq 'has("projects")' "$registry" 2>/dev/null)
+    else
       echo "broken: portfolio.registry at $registry does not parse as valid YAML"
       return 1
     fi
-    local has_projects
-    has_projects=$(yq eval 'has("projects")' "$registry" 2>/dev/null)
     if [ "$has_projects" != "true" ]; then
       echo "broken: portfolio.registry at $registry has no top-level 'projects:' key"
       return 1

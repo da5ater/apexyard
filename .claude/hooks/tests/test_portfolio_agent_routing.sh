@@ -256,21 +256,21 @@ rm -rf "$SB"
 
 # ---------------------------------------------------------------------------
 # Case 6: the shipped agent-routing.yaml.example parses as valid YAML
-# (and is on disk). With yq available we run a full parse; without yq we
-# fall back to a minimal grep check for the required top-level keys.
+# (and is on disk). Prefer Ruby's stdlib YAML parser so this test is not
+# sensitive to which incompatible yq CLI happens to be installed.
 # ---------------------------------------------------------------------------
-if command -v yq >/dev/null 2>&1; then
-  if yq eval '.' "$EXAMPLE_SRC" >/dev/null 2>&1; then
+if command -v ruby >/dev/null 2>&1; then
+  if ruby -r yaml -e 'YAML.safe_load(File.read(ARGV[0]), permitted_classes: [], aliases: true)' "$EXAMPLE_SRC" >/dev/null 2>&1; then
     PASS=$((PASS + 1))
-    green "PASS: agent-routing.yaml.example parses as valid YAML (yq)"
+    green "PASS: agent-routing.yaml.example parses as valid YAML (ruby)"
   else
     FAIL=$((FAIL + 1))
-    FAILED_CASES="$FAILED_CASES\n  - agent-routing.yaml.example parses as valid YAML (yq)"
+    FAILED_CASES="$FAILED_CASES\n  - agent-routing.yaml.example parses as valid YAML (ruby)"
     red "FAIL: agent-routing.yaml.example does not parse as valid YAML"
   fi
   # Confirm the documented top-level keys are present.
-  has_version=$(yq eval 'has("version")' "$EXAMPLE_SRC" 2>/dev/null)
-  has_agents=$(yq eval 'has("agents")'  "$EXAMPLE_SRC" 2>/dev/null)
+  has_version=$(ruby -r yaml -e 'doc = YAML.safe_load(File.read(ARGV[0]), permitted_classes: [], aliases: true) || {}; puts doc.is_a?(Hash) && doc.key?("version")' "$EXAMPLE_SRC" 2>/dev/null)
+  has_agents=$(ruby -r yaml -e 'doc = YAML.safe_load(File.read(ARGV[0]), permitted_classes: [], aliases: true) || {}; puts doc.is_a?(Hash) && doc.key?("agents")' "$EXAMPLE_SRC" 2>/dev/null)
   if [ "$has_version" = "true" ] && [ "$has_agents" = "true" ]; then
     PASS=$((PASS + 1))
     green "PASS: agent-routing.yaml.example has 'version' and 'agents' top-level keys"
@@ -282,7 +282,7 @@ if command -v yq >/dev/null 2>&1; then
 else
   if grep -q '^version:' "$EXAMPLE_SRC" && grep -q '^agents:' "$EXAMPLE_SRC"; then
     PASS=$((PASS + 1))
-    green "PASS: agent-routing.yaml.example has 'version:' and 'agents:' (grep fallback; yq not installed)"
+    green "PASS: agent-routing.yaml.example has 'version:' and 'agents:' (grep fallback; ruby not installed)"
   else
     FAIL=$((FAIL + 1))
     FAILED_CASES="$FAILED_CASES\n  - agent-routing.yaml.example schema check (grep)"

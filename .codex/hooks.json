@@ -1,0 +1,70 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'script=codex-session-start.sh; for base in \"${PWD:-.}\" \"$(git rev-parse --show-toplevel 2>/dev/null || true)\"; do [ -n \"$base\" ] || continue; r=$(cd \"$base\" 2>/dev/null && pwd -P) || continue; while [ -n \"$r\" ] && [ \"$r\" != / ]; do if { [ -f \"$r/.apexyard-fork\" ] || { [ -f \"$r/onboarding.yaml\" ] && [ -f \"$r/apexyard.projects.yaml\" ]; }; } && [ -d \"$r/.codex/hooks\" ]; then exec \"$r/.codex/hooks/$script\"; fi; r=$(dirname \"$r\"); done; done; exit 0'",
+            "statusMessage": "Starting ApexYard session checks"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'script=codex-pre-bash.sh; for base in \"${PWD:-.}\" \"$(git rev-parse --show-toplevel 2>/dev/null || true)\"; do [ -n \"$base\" ] || continue; r=$(cd \"$base\" 2>/dev/null && pwd -P) || continue; while [ -n \"$r\" ] && [ \"$r\" != / ]; do if { [ -f \"$r/.apexyard-fork\" ] || { [ -f \"$r/onboarding.yaml\" ] && [ -f \"$r/apexyard.projects.yaml\" ]; }; } && [ -d \"$r/.codex/hooks\" ]; then exec \"$r/.codex/hooks/$script\"; fi; r=$(dirname \"$r\"); done; done; exit 0'",
+            "statusMessage": "Checking ApexYard Bash gates"
+          }
+        ]
+      },
+      {
+        "matcher": "apply_patch|Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'script=codex-pre-edit.sh; for base in \"${PWD:-.}\" \"$(git rev-parse --show-toplevel 2>/dev/null || true)\"; do [ -n \"$base\" ] || continue; r=$(cd \"$base\" 2>/dev/null && pwd -P) || continue; while [ -n \"$r\" ] && [ \"$r\" != / ]; do if { [ -f \"$r/.apexyard-fork\" ] || { [ -f \"$r/onboarding.yaml\" ] && [ -f \"$r/apexyard.projects.yaml\" ]; }; } && [ -d \"$r/.codex/hooks\" ]; then exec \"$r/.codex/hooks/$script\"; fi; r=$(dirname \"$r\"); done; done; exit 0'",
+            "statusMessage": "Checking ApexYard edit gates"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob|Grep",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'script=suggest-mcp-search.sh; for base in \"${PWD:-.}\" \"$(git rev-parse --show-toplevel 2>/dev/null || true)\"; do [ -n \"$base\" ] || continue; r=$(cd \"$base\" 2>/dev/null && pwd -P) || continue; while [ -n \"$r\" ] && [ \"$r\" != / ]; do if { [ -f \"$r/.apexyard-fork\" ] || { [ -f \"$r/onboarding.yaml\" ] && [ -f \"$r/apexyard.projects.yaml\" ]; }; } && [ -d \"$r/.codex/hooks\" ]; then exec \"$r/.codex/hooks/$script\"; fi; r=$(dirname \"$r\"); done; done; exit 0'",
+            "statusMessage": "Checking ApexYard search guidance"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'script=codex-post-bash.sh; for base in \"${PWD:-.}\" \"$(git rev-parse --show-toplevel 2>/dev/null || true)\"; do [ -n \"$base\" ] || continue; r=$(cd \"$base\" 2>/dev/null && pwd -P) || continue; while [ -n \"$r\" ] && [ \"$r\" != / ]; do if { [ -f \"$r/.apexyard-fork\" ] || { [ -f \"$r/onboarding.yaml\" ] && [ -f \"$r/apexyard.projects.yaml\" ]; }; } && [ -d \"$r/.codex/hooks\" ]; then exec \"$r/.codex/hooks/$script\"; fi; r=$(dirname \"$r\"); done; done; exit 0'",
+            "statusMessage": "Running ApexYard post-Bash checks"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'script=detect-role-trigger.sh; for base in \"${PWD:-.}\" \"$(git rev-parse --show-toplevel 2>/dev/null || true)\"; do [ -n \"$base\" ] || continue; r=$(cd \"$base\" 2>/dev/null && pwd -P) || continue; while [ -n \"$r\" ] && [ \"$r\" != / ]; do if { [ -f \"$r/.apexyard-fork\" ] || { [ -f \"$r/onboarding.yaml\" ] && [ -f \"$r/apexyard.projects.yaml\" ]; }; } && [ -d \"$r/.codex/hooks\" ]; then exec \"$r/.codex/hooks/$script\"; fi; r=$(dirname \"$r\"); done; done; exit 0'"
+          }
+        ]
+      }
+    ]
+  }
+}

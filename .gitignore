@@ -1,6 +1,7 @@
 # ApexYard per-session state — active ticket, pending / completed reviews,
 # onboarding flag. Per-machine, per-clone. Never committed.
 .claude/session/
+.codex/session/
 
 # Real onboarding config (#517). The tracked template is onboarding.example.yaml;
 # /setup copies it to onboarding.yaml (this file) and fills in real values that

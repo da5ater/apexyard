@@ -1,12 +1,12 @@
 #!/bin/bash
-# PostToolUse hook: after `gh pr create` succeeds, tell Claude to invoke the
-# code-reviewer agent (Rex) on the new PR automatically.
+# PostToolUse hook: after `gh pr create` succeeds, require the active AI
+# coding agent to invoke the code-reviewer agent (Rex) on the new PR.
 #
 # Mechanism: the hook writes a pending-review marker and exits with code 2
 # so the stderr message is surfaced back to Claude as an "error", which in
-# practice is how Claude Code's PostToolUse hooks push the next instruction
-# into the conversation. Exit 2 does NOT roll back the PR — it just nudges
-# Claude to run the review immediately rather than "later".
+# practice is how agent PostToolUse hooks push the next instruction into the
+# conversation. Exit 2 does NOT roll back the PR — it nudges the agent to run
+# the review immediately rather than "later".
 #
 # The marker file at .claude/session/pending-reviews/<pr> is also read by
 # the merge-gate hook so a PR cannot be merged without a corresponding Rex
@@ -46,16 +46,43 @@ if [ -n "$PR_NUMBER" ]; then
   echo "${PR_URL}" > "${REPO_ROOT:-.}/.claude/session/pending-reviews/${PR_NUMBER}"
 fi
 
+HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+case "$HOOK_DIR" in
+  */.codex/hooks)
+  AGENT_INSTRUCTION=$(cat <<EOF
+Run Rex NOW using the Codex code-reviewer custom agent:
+
+  agent: code-reviewer
+  prompt: "Review ${PR_REF} at ${PR_URL}. Check the diff, tests, coverage,
+           AgDR linkage, glossary, and commit SHA consistency. Submit the
+           GitHub review before returning."
+
+If this Codex surface cannot launch custom agents directly, run the equivalent
+\`/code-review ${PR_NUMBER:-<pr>}\` workflow in this session and complete it before
+starting unrelated work.
+EOF
+)
+  ;;
+  *)
+  AGENT_INSTRUCTION=$(cat <<EOF
+Invoke Rex NOW using the Agent tool:
+
+  subagent_type: code-reviewer
+  prompt: "Review ${PR_REF} at ${PR_URL}. Check the diff, tests, coverage,
+           AgDR linkage, glossary, and commit SHA consistency. Report verdict."
+EOF
+)
+  ;;
+esac
+
 cat >&2 <<MSG
 AUTO CODE REVIEW REQUIRED
 
 You just created ${PR_REF}. ApexYard requires the code-reviewer agent (Rex)
 to run on every PR before it can be merged — see workflows/code-review.md
-and .claude/rules/pr-workflow.md. Invoke Rex NOW using the Agent tool:
+and .claude/rules/pr-workflow.md.
 
-  subagent_type: code-reviewer
-  prompt: "Review ${PR_REF} at ${PR_URL}. Check the diff, tests, coverage,
-           AgDR linkage, glossary, and commit SHA consistency. Report verdict."
+${AGENT_INSTRUCTION}
 
 The merge-gate hook will block \`gh pr merge\` for this PR until a Rex approval
 file exists at .claude/session/reviews/${PR_NUMBER:-<pr>}-rex.approved.
