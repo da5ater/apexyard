@@ -1,0 +1,11 @@
+version: 1
+projects:
+  - name: shafeay
+    repo: da5ater/shafeay
+    workspace: workspace/shafeay
+    docs: projects/shafeay
+    status: active
+    ticket_prefix: GH
+defaults:
+  status: active
+  ticket_prefix: GH
