@@ -1,0 +1,28 @@
+version: 1
+projects:
+- name: dailyxp
+  repo: da5ater/dailyxp
+  workspace: workspace/dailyxp
+  docs: projects/dailyxp
+  status: active
+  roles:
+  - tech-lead
+  - backend-engineer
+  - frontend-engineer
+  - sre
+- name: dailyxp-api
+  repo: da5ater/dailyxp-api
+  workspace: workspace/dailyxp-api
+  docs: projects/dailyxp-api
+  status: handover
+  roles:
+  - tech-lead
+  - backend-engineer
+  - sre
+  - security-auditor
+defaults:
+  status: active
+  tier: P1
+  ticket_prefix: GH
+  roles:
+  - tech-lead
