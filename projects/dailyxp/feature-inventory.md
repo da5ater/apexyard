@@ -34,7 +34,9 @@
 | 1 | Bar widget per-monitor status | QML — `BarWidget.qml` | Active | UI + doc | Shows crest, selected Task, elapsed/planned, pause/resume, crest/achievement transform, offline/sync indicator; tap opens Play. Verified via PRD § Primary experience + `manifest.json` `barWidget` |
 | 2 | Panel — Play / Journey / World + focused sheets | QML — `Panel.qml` → JS seam `UxModel.js` | Active | UI + model + doc + test | 3 surfaces + focused sheets; `UxModel.project(currentSurface)` drives `uxProjection.currentSurface`; Play is the default. Tests: `ux_model.test.js` (4 tests: frozen, navigation without dashboard, focused sheets, motion) |
 | 3 | State service (once per shell) + envelope recovery | QML + JS — `StateStore.qml` + `StateModel.js` | Active | UI + model + test | Manifest `service: StateStore.qml` (headless, once). Recovers newest checksum-valid primary/backup envelope; equal-gen → primary wins; torn write → preserve whole generation. Tests: `state_store_recovery.test.js` + `state_model.test.js` |
-| 4 | Canonical event journal + frozen time | JS — `EventModel.js` + `docs/event-model.md` | Active | model + doc + test | RFC4122 v4 IDs, frozen UTC + IANA zone + offset + `dayBoundaryMinutes` + `dailyXpDate`; immutable idempotent `append` by `eventId`; canonical sorted-key export + newline; `loadJournal` preserves `originalRaw`, migration V0→V1 returns `backupRaw`. Tests: `event_model.test.js` (14 tests incl. DST, occurrenceKey, **proto**, migration, malformed) |
+<!-- markdownlint-disable MD050 --><!-- __proto__ is a literal JS key name; underscore style is intentional -->
+| 4 | Canonical event journal + frozen time | JS — `EventModel.js` + `docs/event-model.md` | Active | model + doc + test | RFC4122 v4 IDs, frozen UTC + IANA zone + offset + `dayBoundaryMinutes` + `dailyXpDate`; immutable idempotent `append` by `eventId`; canonical sorted-key export + newline; `loadJournal` preserves `originalRaw`, migration V0→V1 returns `backupRaw`. Tests: `event_model.test.js` (14 tests incl. DST, occurrenceKey, __proto__, migration, malformed) |
+<!-- markdownlint-enable MD050 -->
 | 5 | System clock / timezone source | JS/QML — `EventModel` + `StateStore.qml` | Active | model + doc | No `Intl` in QML: `readlink /etc/localtime` → IANA name, wall time + offset from `Date`; refuses recording if unverifiable; default Day Boundary 04:00 configurable |
 | 6 | Local verbs — probe, planning, session | Shell IPC — `omarchy-shell io.github.da5ater.dailyxp <verb>` | Active | doc + model | `addProbe`, `ensurePlanningDay` (async atomic save → check `planningDayStatus`), `sessionStatus`/`sessionCommand`; documented in `README.md` Verify |
 | 7 | Planning hierarchy — Goals, Milestones, Tasks, Routines → Occurrences | JS — `PlanningModel.js` + `PlanningJournal.js` + `docs/planning-model.md` | Active | model + doc + test | Routines generate dated Task Occurrences; carryover makes unfinished occurrence overdue without duplicating XP; edits scope to today/today+future/all; proposal object is previewable/editable, only acceptance mutates plan. Tests: `planning_model.test.js` (largest suite), `planning_journal.test.js` |
@@ -97,7 +99,7 @@ None in this repo. DailyXP is local-only and synchronous today. Future hosted jo
 - Append immutable + idempotent by `eventId`
 - Rebuild deterministic + ignores duplicate IDs
 - DST + Day Boundary changes cannot move frozen history
-- Prototype-like keys (`**proto**`, `constructor`) retained safely
+- Prototype-like keys (`__proto__`, `constructor`) retained safely
 - Occurrence identity from frozen date
 - Canonical export round-trips + replays offline
 - Malformed/unsupported retain exact `originalRaw` + `recoverable`
