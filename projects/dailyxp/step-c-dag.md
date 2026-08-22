@@ -1,7 +1,9 @@
 # Step C — Local stories DAG (FOUND-001 → RELEASE-001)
 
+**Scope:** All issue numbers `#13`, `#59`–`#80` (Step B) and `#63`–`#75` (Step C) below are `da5ater/dailyxp` — not the ops fork. See `projects/dailyxp/step-c-dag.md` for the `blockedBy` wiring.
+
 **Source:** PRD `docs/design/dailyxp-v1.md (Revised)` + `projects/dailyxp/gap-report.md § Ordered remediation backlog`
-**Status:** Step B is 4/4 (`#59` `#60` `#62` `#61` via PRs `#77` `#78` `#79` `#80`). This file is the canonical DAG for Step C. Each story merges one-PR-at-a-time in topological order; `RELEASE-001` lands last. Anti-scope per `vision.md` + `#13 [COLD]`: no cloud/League/AWS.
+**Status:** Step B is 4/4 (`da5ater/dailyxp#59` `#60` `#62` `#61` via PRs `#77` `#78` `#79` `#80`). This file is the canonical DAG for Step C. Each story merges one-PR-at-a-time in topological order; `RELEASE-001` lands last. Anti-scope per `vision.md` + `da5ater/dailyxp#13 [COLD]`: no cloud/League/AWS.
 
 ```mermaid
 flowchart TD
@@ -65,11 +67,11 @@ Every issue carries `Depends on: #N` in its body footer and a `blockedBy: #N` co
 ## What stays deferred
 
 - `API-001 → V1-001` (16 placeholder cloud/league/social/AWS stories) remain `HOLLOW` per gap report — no repo, no code, no `blockedBy` wiring in this file.
-- `#13 [COLD] 2026-10-20` re-audit stays OPEN and untouched; every Step C PR appends a no-change re-audit line there on merge per the PRD release discipline.
+- `da5ater/dailyxp#13 [COLD] 2026-10-20` re-audit stays OPEN and untouched; every Step C PR appends a no-change re-audit line there on merge per the PRD release discipline.
 
 ## Trace
 
-* PRD: `docs/design/dailyxp-v1.md (Revised)` — User Stories § FOUND-001 … RELEASE-001
-* Gap report: `projects/dailyxp/gap-report.md § Ordered remediation backlog + Story-by-story disposition + What we will NOT do`
-* Step B evidence: PRs #77/#78/#79/#80 (see `projects/dailyxp/step-c-dag.md` + issue bodies)
+- PRD: `docs/design/dailyxp-v1.md (Revised)` — User Stories § FOUND-001 … RELEASE-001
+- Gap report: `projects/dailyxp/gap-report.md § Ordered remediation backlog + Story-by-story disposition + What we will NOT do`
+- Step B evidence: `da5ater/dailyxp` PRs #77/#78/#79/#80 (see `projects/dailyxp/step-c-dag.md` + issue bodies)
 
