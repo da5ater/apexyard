@@ -8,15 +8,18 @@
 ## Coverage scope
 
 **Walked**:
+
 - `/` — root JS models (`*Model.js`, `*Journal.js`), QML surfaces (`BarWidget.qml`, `Panel.qml`, `StateStore.qml`), `manifest.json`, `README.md`, `CONTEXT.md`, `AGENTS.md`
 - `docs/` — 12 model docs + `docs/design/dailyxp-v1.md` (V1 PRD, 1036 lines) + `docs/agents/`
 - `tests/` — 16 test suites
 - `.scratch/wayfinder/` — 9 wayfinder question files (`map.md` + 8 deep-dives)
 
 **Skipped** (vendored / generated / fixtures):
+
 - `.git/`, `.scratch/` (except wayfinder reads), `node_modules` (none), `dist`/`build` (none), `coverage` (none)
 
 **Axes that produced findings**:
+
 - [x] HTTP routes / entry points — 1 plugin kind (`bar-widget` + `service`), 2 entry points (not HTTP routes)
 - [x] Data models / DB schema — 16 JS domain models + 1 QML service store
 - [ ] Async jobs / queue handlers — 0 (local-only; no queue/cron/BullMQ/Celery)
@@ -31,7 +34,7 @@
 | 1 | Bar widget per-monitor status | QML — `BarWidget.qml` | Active | UI + doc | Shows crest, selected Task, elapsed/planned, pause/resume, crest/achievement transform, offline/sync indicator; tap opens Play. Verified via PRD § Primary experience + `manifest.json` `barWidget` |
 | 2 | Panel — Play / Journey / World + focused sheets | QML — `Panel.qml` → JS seam `UxModel.js` | Active | UI + model + doc + test | 3 surfaces + focused sheets; `UxModel.project(currentSurface)` drives `uxProjection.currentSurface`; Play is the default. Tests: `ux_model.test.js` (4 tests: frozen, navigation without dashboard, focused sheets, motion) |
 | 3 | State service (once per shell) + envelope recovery | QML + JS — `StateStore.qml` + `StateModel.js` | Active | UI + model + test | Manifest `service: StateStore.qml` (headless, once). Recovers newest checksum-valid primary/backup envelope; equal-gen → primary wins; torn write → preserve whole generation. Tests: `state_store_recovery.test.js` + `state_model.test.js` |
-| 4 | Canonical event journal + frozen time | JS — `EventModel.js` + `docs/event-model.md` | Active | model + doc + test | RFC4122 v4 IDs, frozen UTC + IANA zone + offset + `dayBoundaryMinutes` + `dailyXpDate`; immutable idempotent `append` by `eventId`; canonical sorted-key export + newline; `loadJournal` preserves `originalRaw`, migration V0→V1 returns `backupRaw`. Tests: `event_model.test.js` (14 tests incl. DST, occurrenceKey, __proto__, migration, malformed) |
+| 4 | Canonical event journal + frozen time | JS — `EventModel.js` + `docs/event-model.md` | Active | model + doc + test | RFC4122 v4 IDs, frozen UTC + IANA zone + offset + `dayBoundaryMinutes` + `dailyXpDate`; immutable idempotent `append` by `eventId`; canonical sorted-key export + newline; `loadJournal` preserves `originalRaw`, migration V0→V1 returns `backupRaw`. Tests: `event_model.test.js` (14 tests incl. DST, occurrenceKey, **proto**, migration, malformed) |
 | 5 | System clock / timezone source | JS/QML — `EventModel` + `StateStore.qml` | Active | model + doc | No `Intl` in QML: `readlink /etc/localtime` → IANA name, wall time + offset from `Date`; refuses recording if unverifiable; default Day Boundary 04:00 configurable |
 | 6 | Local verbs — probe, planning, session | Shell IPC — `omarchy-shell io.github.da5ater.dailyxp <verb>` | Active | doc + model | `addProbe`, `ensurePlanningDay` (async atomic save → check `planningDayStatus`), `sessionStatus`/`sessionCommand`; documented in `README.md` Verify |
 | 7 | Planning hierarchy — Goals, Milestones, Tasks, Routines → Occurrences | JS — `PlanningModel.js` + `PlanningJournal.js` + `docs/planning-model.md` | Active | model + doc + test | Routines generate dated Task Occurrences; carryover makes unfinished occurrence overdue without duplicating XP; edits scope to today/today+future/all; proposal object is previewable/editable, only acceptance mutates plan. Tests: `planning_model.test.js` (largest suite), `planning_journal.test.js` |
@@ -85,6 +88,7 @@ None in this repo. DailyXP is local-only and synchronous today. Future hosted jo
 ### Test names (137 — grouped)
 
 #### `event_model.test.js` (14)
+
 - RFC4122 v4 from injectable source, `isUuidV4`
 - Freezes UTC/timezone/offset/localTime/DailyXP date
 - Derives verified local context from system clock
@@ -93,7 +97,7 @@ None in this repo. DailyXP is local-only and synchronous today. Future hosted jo
 - Append immutable + idempotent by `eventId`
 - Rebuild deterministic + ignores duplicate IDs
 - DST + Day Boundary changes cannot move frozen history
-- Prototype-like keys (`__proto__`, `constructor`) retained safely
+- Prototype-like keys (`**proto**`, `constructor`) retained safely
 - Occurrence identity from frozen date
 - Canonical export round-trips + replays offline
 - Malformed/unsupported retain exact `originalRaw` + `recoverable`
@@ -101,6 +105,7 @@ None in this repo. DailyXP is local-only and synchronous today. Future hosted jo
 - Torn replacement restarts from envelope backup
 
 #### `planning_model.test.js` (largest) + `planning_journal.test.js`
+
 - Routine → Task Occurrence weekday/custom generation, `occurrenceKey(routineId, dailyXpDate)`
 - Carryover → overdue without duplicating XP; completion/reschedule/skip/dismiss/archive/merge
 - Repeated misses → smaller rescheduling proposal
@@ -108,6 +113,7 @@ None in this repo. DailyXP is local-only and synchronous today. Future hosted jo
 - Goal/Milestone reward locking, urgency/deadline/skill associations
 
 #### `session_model.test.js` (largest) + `session_journal.test.js`
+
 - Single active Session invariant
 - Selection ≠ start; delayed reminder not auto-start
 - `startSession` / `pause` / `resume` / `finish` / `discard` / `changeTask`
@@ -120,16 +126,20 @@ None in this repo. DailyXP is local-only and synchronous today. Future hosted jo
 - Correction cannot create future/overlapping history; finish instant frozen
 
 #### `habit_model.test.js` + `habit_journal.test.js`, `recovery_model.test.js`
+
 - Habit scheduling + streak; Recovery Tracks vs Habits separation; relapse ends Attempt only on explicit record
 
 #### `progression_model.test.js`, `story_model.test.js`
+
 - Lifetime XP `500+50*level` per Level, Season XP capped, Recovery XP separate; `XP Ledger` explainable
 - Province/landmark mapping; Momentum Dormant→Legendary; Hollow King only unfinished territory; Comeback Quest 7→3 days
 
 #### `feed_model.test.js`, `insight_model.test.js`, `share_model.test.js`
+
 - Bounded sound/notifications; stats; share cards never auto-post
 
 #### `state_model.test.js`, `state_store_recovery.test.js`, `ux_model.test.js`
+
 - Envelope primary/backup recovery, generation tie-break, torn-write preservation
 - `UxModel.project` frozen/deterministic; Play/Journey/World navigation without dashboard; focused sheets; `prefers-reduced-motion` → fade + legible scale
 
