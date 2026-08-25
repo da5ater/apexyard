@@ -22,10 +22,10 @@ when the AC describes a user-visible or OS-integrated capability.
 | 69 | STORY-001 | PARTIAL/NOT — kingdom derived but never rendered | #87 `89bbdc7` | Kingdom sheet: provinces, landmarks, antagonists, Comeback Quest controls |
 | 70 | RECOV-001 | PARTIAL — recovery never surfaced; no relapse/deletion UI | #88 `10e3c98` | Recovery sheet: tracks, backdated start, check-in, explicit relapse, restart, deletion scopes |
 | 71 | UX-001 | PARTIAL — stacked single-scroll panel, reduced-motion hardcoded off | #89 `1e7cea8` | Play/Journey/World navigation, focused sheets, overdue fold, protected Recovery entry, reduced-motion bound to uxProjection |
-| 72 | INSIGHT-001 | **NOT IMPLEMENTED** — `InsightModel.js` orphaned, not imported in StateStore | pending | Wire `insightProjection`; statistics sheet; app-tracking consent; Recovery isolation proof |
-| 73 | SHARE-001 | **NOT IMPLEMENTED** — metadata object ≠ image; no export surface | pending | Card preview + field removal + rendered image + Save/Copy/preparePost; Recovery gated; sample labelled/isolated |
-| 74 | FEED-001 | **NOT IMPLEMENTED** — sounds never play; budget orphaned | pending | FeedModel wired: shouldPlay gate, category volumes, quiet hours, visual equivalents, bundled notifications |
-| 75 | RELEASE-001 | BLOCKED on #72–#74 | pending | Clean-install lifecycle offline matrix + refreshed marketplace evidence |
+| 72 | INSIGHT-001 | **NOT IMPLEMENTED** — `InsightModel.js` orphaned, not imported in StateStore | #90 `147b8ab` (2026-08-22) | InsightProjection wired into StateStore + Journey statistics sheet; name-level app-tracking consent (enable/disable/exclude/rename/merge/delete, persisted as events + journal replay); Recovery structurally excluded from all aggregates |
+| 73 | SHARE-001 | **NOT IMPLEMENTED** — metadata object ≠ image; no export surface | #91 `75495a6` (2026-08-22) | Share sheet: type selector, live preview = exported PNG (grabToImage), per-field removal, sample mode labelled in-image + isolated, prepared X/LinkedIn/Facebook posts (never auto-post), recovery structurally excluded |
+| 74 | FEED-001 | **NOT IMPLEMENTED** — sounds never play; budget orphaned | **ABANDONED** — Step C closed at 11/13 (`#92 [CLEAR-SLATE]`) | FeedModel wired: shouldPlay gate, category volumes, quiet hours, visual equivalents, bundled notifications |
+| 75 | RELEASE-001 | BLOCKED on #72–#74 | **ABANDONED** — deadline forfeited by phase closure (`#92 [CLEAR-SLATE]`) | Clean-install lifecycle offline matrix + refreshed marketplace evidence |
 
 ## Verification shape per PR
 

@@ -1,0 +1,7 @@
+# Verbatim external source captures — discovery packs
+# These files are raw vendor/PRD/design-doc captures preserved as
+# evidence (not authored content), so markdownlint house-style rules do
+# not apply. Per the ui_paths_exclude principle: carve out capture dirs
+# rather than corrupt discovery evidence by reformatting it.
+projects/*/discovery/**
+projects/_archive/**

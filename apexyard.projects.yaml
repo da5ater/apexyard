@@ -20,6 +20,32 @@ projects:
   - backend-engineer
   - sre
   - security-auditor
+- name: sassy
+  repo: da5ater/Sassy
+  workspace: workspace/sassy
+  docs: projects/sassy
+  status: active
+  tier: P1
+  ticket_prefix: GH
+  roles:
+  - tech-lead
+  - backend-engineer
+  - frontend-engineer
+  - sre
+  - security-auditor
+- name: knowledge-work
+  repo: da5ater/knowledge-work
+  docs: projects/_archive/knowledge-work
+  status: archived
+  tier: P1
+  ticket_prefix: GH
+  roles:
+  - tech-lead
+  archived_at: 2026-08-25
+  notes: >-
+    Archived by owner decision (2026-08-25). Greenfield idea (agentic
+    knowledge-work "Jarvis"); registered and lightly grilled, Hermes evaluation
+    captured under research/. No repo created. Kept for future reference.
 defaults:
   status: active
   tier: P1

@@ -3,7 +3,7 @@
 **Scope:** All issue numbers `#13`, `#59`–`#80` (Step B) and `#63`–`#75` (Step C) below are `da5ater/dailyxp` — not the ops fork. See `projects/dailyxp/step-c-dag.md` for the `blockedBy` wiring.
 
 **Source:** PRD `docs/design/dailyxp-v1.md (Revised)` + `projects/dailyxp/gap-report.md § Ordered remediation backlog`
-**Status:** Step B is 4/4 (`da5ater/dailyxp#59` `#60` `#62` `#61` via PRs `#77` `#78` `#79` `#80`). Step C executable stories #68–#71 are merged (`f39180b` `89bbdc7` `10e3c98` `1e7cea8` via PRs #86–#89) under the **executable bar** — see `projects/dailyxp/step-c-executable-triage.md` for the AC-by-AC verdicts. Remaining: #72 → #73 → #74 → #75, each one-PR-at-a-time in topological order; `RELEASE-001` lands last (deadline 2026-08-24 10:00 Africa/Cairo). Anti-scope per `vision.md` + `da5ater/dailyxp#13 [COLD]`: no cloud/League/AWS.
+**Status:** **CLOSED 2026-08-22 at 11/13** — see `step-c-phase-close.md`. Step B is 4/4 (`da5ater/dailyxp#59` `#60` `#62` `#61` via PRs `#77` `#78` `#79` `#80`). Step C executable stories #68–#73 are merged (`f39180b` `89bbdc7` `10e3c98` `1e7cea8` via PRs #86–#89; INSIGHT-001 via PR #90 → `147b8ab`; SHARE-001 via PR #91 → `75495a6`, both 2026-08-22) under the **executable bar** — see `projects/dailyxp/step-c-executable-triage.md` for the AC-by-AC verdicts. Stories #74 FEED-001 and #75 RELEASE-001 were **abandoned** by the phase-closure decision (`da5ater/dailyxp#92 [CLEAR-SLATE]`); the next phase is a full redesign from a clean slate, run by a separate agent. Anti-scope per `vision.md` + `da5ater/dailyxp#13 [COLD]`: no cloud/League/AWS.
 
 ```mermaid
 flowchart TD
